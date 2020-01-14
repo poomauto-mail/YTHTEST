@@ -63,7 +63,7 @@ Vue.use(Router)
 function configRoutes() {
   return [
     {
-      path: '/',
+      path: '/pages',
       redirect: '/dashboard',
       name: 'Home',
       component: DefaultContainer,
@@ -300,9 +300,9 @@ function configRoutes() {
       ]
     },
     {
-      path: '/pages',
-      redirect: '/pages/404',
-      name: 'Pages',
+      path: '/',
+      redirect: '/login',
+      name: 'Login',
       component: {
         render (c) { return c('router-view') }
       },

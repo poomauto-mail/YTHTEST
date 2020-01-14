@@ -13,10 +13,15 @@
 </template>
 <script>
 import { Footer as TheFooter } from '@coreui/vue'
+import { get } from 'vuex-pathify'
+
 export default {
   name: 'DefaultFooter',
   components: {
     TheFooter
   },
+  computed: {
+     //data: get('hello.greeting'),
+  }
 }
 </script>

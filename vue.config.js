@@ -1,5 +1,8 @@
 module.exports = {
   lintOnSave: false,
   runtimeCompiler: true,
-  publicPath: '/'
-}
+  publicPath: "/",
+  devServer: {
+    proxy: "http://localhost:5000"
+  }
+};
