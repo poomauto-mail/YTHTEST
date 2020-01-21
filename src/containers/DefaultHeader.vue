@@ -13,6 +13,9 @@
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto">
         <b-nav-item class="d-md-down-none">
+            {{username}}
+        </b-nav-item>
+        <b-nav-item class="d-md-down-none">
           <i class="icon-bell"></i>
           <b-badge pill variant="danger">5</b-badge>
         </b-nav-item>
@@ -31,6 +34,8 @@
 <script>
 import { Header as AppHeader, SidebarToggler, AsideToggler } from '@coreui/vue'
 import DefaultHeaderDropdownAccnt from './DefaultHeaderDropdownAccnt'
+import Vue from 'vue';
+import {get} from 'vuex-pathify';
 
 export default {
   name: 'DefaultHeader',
@@ -39,6 +44,26 @@ export default {
     AppHeader,
     DefaultHeaderDropdownAccnt,
     SidebarToggler
+  },
+  data () {
+    return {
+      username:""
+    }
+  },
+  computed: {
+   
+  },
+  methods:{
+    user () {
+      Vue.prototype.$getItem("CREDENTIAL").then(res => {
+        if(res!=null){
+          this.username = res.credentialDecrypt.display_name
+        }
+      })
+    }
+  },
+  created() {
+    this.user();
   }
 }
 </script>

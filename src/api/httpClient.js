@@ -1,17 +1,45 @@
 import axios from "axios";
+import Vue from "vue";
+import join from "url-join";
+import router from "@/router";
 
-const httpClient = axios.create({
-  baseURL: "http://localhost:5000/api",
-  timeout: 12000, // indicates, 1000ms ie. 1 second
-  headers: {
-    // "Access-Control-Allow-Origin": "*",
-    // "Access-Control-Allow-Headers":
-    //   "Origin, X-Requested-With, Content-Type, Accept",
-    "Content-Type": "application/json",
-    "cache-control": "no-cache",
-
-    // anything you want to add to the headers
+//add headers
+axios.interceptors.request.use(
+  config => {
+    return Vue.prototype.$getItem("CREDENTIAL").then(res => {
+      if (res != null) {
+        config.headers["Authorization"] = "Bearer " + res.access_token;
+      }
+      config.url = join(process.env.VUE_APP_ROOT_API, config.url);
+      return config;
+    });
+  },
+  error => {
+    Promise.reject(error);
   }
-});
+);
 
-export default httpClient;
+//handler response
+axios.interceptors.response.use(
+  response => {
+    return response;
+  },
+  function(error) {
+    switch (error.response.status) {
+      case 400: //....
+        break;
+      case 401:
+        alert("Unauthrorized!");
+        router.replace("pages/login");
+        Vue.prototype.$removeItem("CREDENTIAL");
+        break;
+      case 404: //....
+        break;
+      case 500:
+        alert(error.response);
+        break;
+    }
+  }
+);
+
+export const httpClient = axios;

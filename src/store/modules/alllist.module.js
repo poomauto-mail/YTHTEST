@@ -1,8 +1,8 @@
-import { make, set } from "vuex-pathify";
-import { GetAllList } from "../../api/list.api";
+import { make } from "vuex-pathify";
+import { getAllList } from "../../api/list.api";
 
 const state = {
-  alllist: [],
+  supplierlist: [],
   Request: {
     "RequestsSubjects": {
       "SubjectsName": null,
@@ -188,20 +188,23 @@ const mutations = {
 const getters = {
     ...make.getters(state),
     sortDataGetters: state => {
-        return state.alllist.filter(item => item.age.toString().includes(1))
+        return state.supplierList.suppliers//.filter(item => item.age.toString().includes(1))
     },
 
     sortDataGettersSearch: (state, getters) => {
-        return state.alllist.filter(item => item.age.toString().includes(2))
-    }
+        return state.supplierList.suppliers//.filter(item => item.age.toString().includes(2))
+    },
+    
 };
 
 const actions = {
-  ...make.actions(state),
+  //...make.actions(state),
 
   allListAction({ commit }) {
-    GetAllList().then(res => {
-      commit("SET_ALLLIST", res.data);
+    getAllList().then(res => {
+     if(res !=null){
+      commit("SET_SUPPLIERLIST", res.data);
+     }
     });
   }
 };

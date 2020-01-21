@@ -2,7 +2,7 @@ export default {
   items: [
     {
       name: 'Dashboard',
-      url: 'pages/dashboard',
+      url: '/dashboard',
       icon: 'icon-speedometer',
       badge: {
         variant: 'primary',

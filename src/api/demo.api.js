@@ -1,4 +1,4 @@
-import httpClient from "./httpClient";
+import {httpClient} from "./httpClient";
 
 const END_POINT = "/values";
 const getDemo = () => httpClient.get(END_POINT);

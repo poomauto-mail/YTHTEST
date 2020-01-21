@@ -1,9 +1,9 @@
-import httpClient from "./httpClient";
+import {httpClient} from "./httpClient";
 
-const ALL_LIST = "/list/alllist";
+const ALL_LIST = "/supplier/list";
 
-const GetAllList = () => httpClient.get(ALL_LIST);
+const getAllList = () => httpClient.get(ALL_LIST);
 
 export {
-    GetAllList
+    getAllList
 }

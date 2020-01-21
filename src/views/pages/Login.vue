@@ -8,19 +8,53 @@
               <b-card-body>
                 <b-form>
                   <h1>Login</h1>
-                  <p class="text-muted">Sign In to your account</p>
+                  <p class="text-muted">Sign In to your account {{localforageKey}}</p>
                   <b-input-group class="mb-3">
-                    <b-input-group-prepend><b-input-group-text><i class="icon-user"></i></b-input-group-text></b-input-group-prepend>
-                    <b-form-input type="text" v-model="username" class="form-control" placeholder="Username" autocomplete="username email" />
+                    <b-input-group-prepend>
+                      <b-input-group-text>
+                        <i class="icon-user"></i>
+                      </b-input-group-text>
+                    </b-input-group-prepend>
+                    <b-form-input
+                      type="text"
+                      v-model="username"
+                      class="form-control"
+                      placeholder="Username"
+                      autocomplete="username email"
+                    />
                   </b-input-group>
                   <b-input-group class="mb-4">
-                    <b-input-group-prepend><b-input-group-text><i class="icon-lock"></i></b-input-group-text></b-input-group-prepend>
-                    <b-form-input type="password" v-model="password" class="form-control" placeholder="Password" autocomplete="current-password" />
+                    <b-input-group-prepend>
+                      <b-input-group-text>
+                        <i class="icon-lock"></i>
+                      </b-input-group-text>
+                    </b-input-group-prepend>
+                    <b-form-input
+                      type="password"
+                      v-model="password"
+                      class="form-control"
+                      placeholder="Password"
+                      autocomplete="current-password"
+                    />
                   </b-input-group>
                   <b-row>
                     <b-col cols="6">
-                      {{username+password}}
-                      <b-button variant="primary" v-on:click="loginAction({username,password})" class="px-4">Login</b-button>
+                      {{username+password+" "+ spinner}}
+                      <b-button
+                        variant="primary"
+                        v-on:click="loginAction({username,password})"
+                        class="px-4"
+                        v-bind:style="styles.loginBtnStyle"
+                      >
+                        <img
+                          class="px-4"
+                          v-bind:style="styles.spinnerStyles"
+                          v-if="spinner"
+                          src="img/spinner.gif"
+                        />
+                        Login
+                      
+                      </b-button>
                     </b-col>
                     <b-col cols="6" class="text-right">
                       <b-button variant="link" class="px-0">Forgot password?</b-button>
@@ -46,18 +80,37 @@
 </template>
 
 <script>
-import { call } from 'vuex-pathify';
+import { call, get } from "vuex-pathify";
 export default {
-  name: 'Login',
-  data () {
+  name: "Login",
+  data() {
     return {
       username: "",
-      password: ""
-    }
+      password: "",
+      localforageKey: "",
+      styles: {
+        loginBtnStyle: {
+        display: "flex",
+      },
+      spinnerStyles: {
+        height: "25px",
+        width: "auto"
+      }
+      }
+    };
   },
-    methods : {
-      //call action in modules name maps in store/index.js
-      ...call("authentication/*")
-    }
-}
+  computed: {
+    spinner: get("authentication/loading")
+  },
+  methods: {
+    //call action in modules name maps in store/index.js
+    ...call("authentication/*")
+  },
+
+  beforeCreate() {
+    //way 1 this.$getItem("POOM",function(err, value) { console.log(value) });
+    //way 2 this.$getItem("POOM").then(value => value);
+    this.$removeItem("CREDENTIAL");
+  }
+};
 </script>

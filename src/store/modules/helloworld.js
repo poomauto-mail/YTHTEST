@@ -31,7 +31,7 @@ const actions = {
     })
   },
 
-  clearDemo({commit}, payload){debugger
+  clearDemo({commit}, payload){
     commit("SET_DEMO",payload)
   }
 

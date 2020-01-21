@@ -13,14 +13,14 @@
         <!-- <p>Click to <a href="#" @click.prevent="setData">Counter: {{ data }}</a></p> -->
         <form id="app" @submit="checkForm" action="" method="post">
           <div id="app">
-            <p>Store {{getUserData}}</p>
-            <p>Store {{getAllUsers}}</p>
+            <!-- <p>Store {{creadential}}</p>
+            <p>Store  :{{getAllUsers}}</p>
             <p>Developer mode : {{mode}}
             <h2>Your Name Is: {{firstName}} {{lastName}}</h2>
 
             <label>
               First Name
-              <input type="text" v-model="firstName" />
+              <input type="text" v-model="getAllUsersByIndex"/>
             </label>
             <label>
               Last Name
@@ -28,8 +28,8 @@
             </label>
             <button type="button" @click="saveName()">Save</button>
             <button type="button" @click="loadDemo()">GetDemo</button>
-            <button type="button" @click="clearDemo('demox')">ClearDemo</button>
-            
+            <button type="button" @click="clearDemo('demox')">ClearDemo</button> -->
+            <p>Developer mode : {{mode}}</p>
             {{getDemo}}
           </div>
         </form>
@@ -63,8 +63,9 @@ import DefaultAside from "./DefaultAside";
 import DefaultHeaderDropdownAccnt from "./DefaultHeaderDropdownAccnt";
 import DefaultHeader from "./DefaultHeader";
 import DefaultFooter from "./DefaultFooter";
-import { get ,set ,call } from "vuex-pathify";
-import { mapActions, mapGetters } from 'vuex'
+import { get  ,call } from "vuex-pathify";
+import router from "@/router";
+import Vue from 'vue';
 
 export default {
   name: "DefaultContainer",
@@ -85,9 +86,10 @@ export default {
   data() {
     return {
       nav: nav.items,
-      mode: process.env.NODE_ENVx+" API: "+ process.env.ROOT_API,
+      mode: process.env.VUE_APP_NODE_ENV+" API: "+ process.env.VUE_APP_ROOT_API,
       firstName: "",
-      lastName: ""
+      lastName: "",
+      creadential: {},
     };
   },
   computed: {
@@ -101,7 +103,9 @@ export default {
     },
     getDemo: get('hello/demo'),
     getUserData: get('authentication/userdata'),
-    getAllUsers: get("alllist/sortDataGettersSearch",2)// sortDataGetters
+    //getAllUsers: get("alllist/sortDataGettersSearch",2)// sortDataGetters
+    getAllUsers: get("alllist/supplierlist"),
+    getAllUsersByIndex: get("alllist/supplierlist@suppliers[0].name")
   },
   methods: {
     checkForm:  function (e) {
@@ -113,11 +117,16 @@ export default {
     }
     ,
     loadDemo: call("hello/loadDemo"),
-    listact: call("alllist/allListAction"),
+    listAction: call("alllist/allListAction"),
   },
   created : function() {
-     this.listact();
+    this.listAction();
+    this.$getItem("CREDENTIAL").then(res => this.creadential = res)
     // alert(this.$store.)
+  },
+  mounted () {
+    //Vue.prototype.$removeItem("CREDENTIAL");
+    //router.push("pages/login");
   }
 };
 </script>

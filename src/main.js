@@ -9,17 +9,27 @@ import BootstrapVue from 'bootstrap-vue'
 import App from './App'
 import store from './store'
 import router from './router'
+import VueJwtDecode from 'vue-jwt-decode'
+import forageHelper from './helper/localForageHelper';
 
 // todo
+const plugin = {
+  install () {
+      Vue.forage = forageHelper
+  }
+}
 // cssVars()
 Vue.config.productionTip = false;
 Vue.use(BootstrapVue)
+Vue.use(VueJwtDecode)
+Vue.use(plugin)
 console.log(process.env.NODE_ENV)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
   store,
+  VueJwtDecode,
   template: '<App/>',
   components: {
     App
