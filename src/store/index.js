@@ -12,15 +12,6 @@ import * as localforage from 'localforage'
 pathify.debug()
 Vue.use(Vuex)
 Vue.use(VueLocalForage)
-
-// localforage.config({
-//     driver      : localforage.WEBSQL, // Force WebSQL; same as using setDriver()
-//     name        : 'myApp',
-//     version     : 1.0,
-//     size        : 4980736, // Size of database, in bytes. WebSQL-only for now.
-//     storeName   : 'keyvaluepairs', // Should be alphanumeric, with underscores.
-//     description : 'some description'
-//   });
 const store = new Vuex.Store({
     modules: {
         hello,
@@ -30,5 +21,13 @@ const store = new Vuex.Store({
     plugins:[pathify.plugin, createPersistedState({ storage: localforage })],
 })
 
+// localforage.config({
+//     driver      : localforage.WEBSQL, // Force WebSQL; same as using setDriver()
+//     name        : 'myApp',
+//     version     : 1.0,
+//     size        : 4980736, // Size of database, in bytes. WebSQL-only for now.
+//     storeName   : 'keyvaluepairs', // Should be alphanumeric, with underscores.
+//     description : 'some description'
+//   });
 export default store
 window.store = store

@@ -339,7 +339,7 @@ function configRoutes() {
           path: "login",
           name: "Login",
           component: Login,
-          async beforeEnter(to, from, next) {debugger
+          async beforeEnter(to, from, next) {
             if ((await Vue.forage.getValue("CREDENTIAL")) != null) {
               next({ path: "/dashboard" });
             } else {
@@ -364,7 +364,7 @@ const router = new Router({
   routes: configRoutes()
 });
 
-router.beforeEach(async (to, from, next) => {debugger
+router.beforeEach(async (to, from, next) => {
   var credential = await Vue.forage.getValue("CREDENTIAL");
   if (to.matched.some(route => route.meta.requiresAuth)) {
     if (credential == null) {
