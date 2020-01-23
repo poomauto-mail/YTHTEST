@@ -28,15 +28,19 @@ const actions = {
       } else {
         alert("incorrect credential!");
       }
-    });
+    }).catch(error => {
+      commit("SET_LOADING", false)
+  });
   },
 
-  logOutAction({commit}){
+  logOutAction({commit}){debugger
     logOut().then(res => {
       Vue.prototype.$removeItem("CREDENTIAL");
       router.push({name: 'Login', url:"pages/login"})
       alert('logout success')
-    })
+    }).catch(error => {
+      console.log(error);
+  });
   }
 };
 

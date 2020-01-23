@@ -1,8 +1,9 @@
 import { make } from "vuex-pathify";
-import { getAllList } from "../../api/list.api";
+import { getAllList, getListPagination } from "../../api/list.api";
 
 const state = {
   supplierlist: [],
+  jobList: [],
   Request: {
     "RequestsSubjects": {
       "SubjectsName": null,
@@ -206,6 +207,21 @@ const actions = {
       commit("SET_SUPPLIERLIST", res.data);
      }
     });
+  },
+
+  listPaginationAction({ commit },  resBody ){
+    var json = {
+      pagesize: 10,
+      pagenumber: 1,
+      orderproperty: "CREATEDATE",
+      orderbydescending: true,
+      search: []
+    };
+    getListPagination(json).then(res => {
+      commit("SET_JOB_LIST", res.data)
+    }).catch(error => {
+      console.log(error)
+    })
   }
 };
 

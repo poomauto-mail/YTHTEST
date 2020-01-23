@@ -11,7 +11,7 @@ import store from './store'
 import router from './router'
 import VueJwtDecode from 'vue-jwt-decode'
 import forageHelper from './helper/localForageHelper';
-
+import { Pagination } from 'bootstrap-vue/es/components'
 // todo
 const plugin = {
   install () {
@@ -23,6 +23,7 @@ Vue.config.productionTip = false;
 Vue.use(BootstrapVue)
 Vue.use(VueJwtDecode)
 Vue.use(plugin)
+Vue.use(Pagination)
 console.log(process.env.NODE_ENV)
 /* eslint-disable no-new */
 new Vue({

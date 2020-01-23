@@ -3,19 +3,19 @@
 </template>
 
 <script>
-import Vue from 'vue';
-import router from "@/router";
+// import Vue from 'vue';
+// import router from "@/router";
 export default {
   name: 'app',
-  mounted () {
-    window.onpopstate = event => {
-      Vue.prototype.$getItem("CREDENTIAL").then(res => {
-        if(res != null){
-          router.push({name: "Home", url: "dashboard"})
-        }
-      });
-    }
-  }
+  // mounted () {
+  //   window.onpopstate = event => {
+  //     Vue.prototype.$getItem("CREDENTIAL").then(res => {
+  //       if(res != null){
+  //         router.push({name: "Home", url: "dashboard"})
+  //       }
+  //     });
+  //   }
+  // }
 }
 </script>
 

@@ -75,7 +75,21 @@ function configRoutes() {
         {
           path: "dashboard",
           name: "Dashboard",
-          component: Dashboard
+          component: Dashboard,
+          meta: {
+            permissions: [
+              {
+                role: "UserNTL",
+                access: true,
+                redirect: "login"
+              },
+              {
+                role: "AdminNTL",
+                access: true,
+                redirect: "login"
+              }
+            ]
+          }
         },
         {
           path: "theme",
@@ -86,23 +100,59 @@ function configRoutes() {
               return c("router-view");
             }
           },
+          meta: {
+            permissions: [
+              {
+                role: "UserNTL",
+                access: true,
+                redirect: "login"
+              }
+            ]
+          },
           children: [
             {
               path: "colors",
               name: "Colors",
-              component: Colors
+              component: Colors,
+              meta: {
+                permissions: [
+                  {
+                    role: "AdminNTL",
+                    access: false,
+                    redirect: "login"
+                  }
+                ]
+              }
             },
             {
               path: "typography",
               name: "Typography",
-              component: Typography
+              component: Typography,
+              meta: {
+                permissions: [
+                  {
+                    role: "UserNTL",
+                    access: true,
+                    redirect: "login"
+                  }
+                ]
+              }
             }
           ]
         },
         {
           path: "charts",
           name: "Charts",
-          component: Charts
+          component: Charts,
+          meta: {
+            permissions: [
+              {
+                role: "UserNTL",
+                access: true,
+                redirect: "dashboard"
+              }
+            ]
+          }
         },
         {
           path: "widgets",
@@ -364,13 +414,30 @@ const router = new Router({
   routes: configRoutes()
 });
 
-router.beforeEach(async (to, from, next) => {
+const isAuthenticated = async () => {
   var credential = await Vue.forage.getValue("CREDENTIAL");
+  if (credential == null) return true;
+  else return false;
+};
+
+const hasPermissionNeed = async to => {
+  var credential = await Vue.forage.getValue("CREDENTIAL");
+  return to.meta.permissions.find(item => {
+    if (item.role === credential.credentialDecrypt.member_of) return true;
+    else return false;
+  });
+};
+
+router.beforeEach(async (to, from, next) => {
   if (to.matched.some(route => route.meta.requiresAuth)) {
-    if (credential == null) {
+    if (await isAuthenticated()) {
       next({ path: "/pages/login" });
     } else {
-      next();
+      if (await hasPermissionNeed(to)) {
+        next();
+      } else {
+        next({ path: "/pages/404" });
+      }
     }
   } else {
     next();

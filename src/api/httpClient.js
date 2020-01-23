@@ -26,17 +26,19 @@ axios.interceptors.response.use(
   },
   function(error) {
     switch (error.response.status) {
-      case 400: //....
+      case 400: 
+      alert("Bad Request: "+ error)
         break;
       case 401:
         alert("Unauthrorized!");
-        router.replace("pages/login");
+        router.push({name: 'Login', url:"pages/login"})
         Vue.prototype.$removeItem("CREDENTIAL");
         break;
       case 404: //....
         break;
       case 500:
-        alert(error.response);
+        router.push({name: 'Page500', url:"pages/500"})
+        // alert(error.response);
         break;
     }
   }
