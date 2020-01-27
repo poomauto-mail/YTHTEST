@@ -191,11 +191,9 @@ const getters = {
     sortDataGetters: state => {
         return state.supplierList.suppliers//.filter(item => item.age.toString().includes(1))
     },
-
     sortDataGettersSearch: (state, getters) => {
         return state.supplierList.suppliers//.filter(item => item.age.toString().includes(2))
     },
-    
 };
 
 const actions = {

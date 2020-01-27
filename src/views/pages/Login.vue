@@ -53,7 +53,6 @@
                           src="img/spinner.gif"
                         />
                         Login
-                      
                       </b-button>
                     </b-col>
                     <b-col cols="6" class="text-right">

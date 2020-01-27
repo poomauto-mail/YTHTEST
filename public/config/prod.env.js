@@ -1,4 +1,3 @@
-module.exports = {
-    NODE_ENV: '"prod"',
-    ROOT_API: "http://www.google.com"
-  }
+export default {
+  ROOT_API: 'http://172.20.36.59:8000/api'
+}

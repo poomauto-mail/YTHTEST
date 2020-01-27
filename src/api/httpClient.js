@@ -2,6 +2,7 @@ import axios from "axios";
 import Vue from "vue";
 import join from "url-join";
 import router from "@/router";
+import configs from '../../public/config/index';
 
 //add headers
 axios.interceptors.request.use(
@@ -10,7 +11,7 @@ axios.interceptors.request.use(
       if (res != null) {
         config.headers["Authorization"] = "Bearer " + res.access_token;
       }
-      config.url = join(process.env.VUE_APP_ROOT_API, config.url);
+      config.url = join(configs.ROOT_API, config.url);
       return config;
     });
   },

@@ -89,7 +89,7 @@ export default {
     return {
       nav: nav.items,
       mode:
-        process.env.VUE_APP_NODE_ENV + " API: " + process.env.VUE_APP_ROOT_API,
+        process.env.NODE_ENV,
       firstName: "",
       lastName: "",
       creadential: {},
@@ -124,7 +124,6 @@ export default {
     jobListAction: call("alllist/listPaginationAction")
   },
   created: function() {
-
     this.jobListAction("markup");
     this.listAction();
     this.$getItem("CREDENTIAL").then(res => (this.creadential = res));
