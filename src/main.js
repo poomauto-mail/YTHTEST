@@ -12,6 +12,17 @@ import router from './router'
 import VueJwtDecode from 'vue-jwt-decode'
 import forageHelper from './helper/localForageHelper';
 import { Pagination } from 'bootstrap-vue/es/components'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+Vue.use(ElementUI)
+
+import VueDataTables from 'vue-data-tables'
+Vue.use(VueDataTables)
+
+import lang from 'element-ui/lib/locale/lang/en'
+import locale from 'element-ui/lib/locale'
+
+locale.use(lang)
 // import ElementUI from 'element-ui'
 // import 'element-ui/lib/theme-chalk/index.css'
 // todo

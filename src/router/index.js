@@ -209,7 +209,21 @@ function configRoutes() {
             {
               path: "tables",
               name: "Tables",
-              component: Tables
+              component: Tables,
+              meta: {
+                permissions: [
+                  {
+                    role: group.USER_GROUP.User,
+                    access: true,
+                    redirect: "login"
+                  },
+                  {
+                    role: group.USER_GROUP.Admin,
+                    access: true,
+                    redirect: "login"
+                  }
+                ]
+              }
             },
             {
               path: "tabs",
