@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
+import group from '../../public/config/index';
 
 // Containers
 const DefaultContainer = () => import("@/containers/DefaultContainer");
@@ -79,12 +80,12 @@ function configRoutes() {
           meta: {
             permissions: [
               {
-                role: "UserNTL",
+                role: group.USER_GROUP.User,
                 access: true,
                 redirect: "login"
               },
               {
-                role: "AdminNTL",
+                role: group.USER_GROUP.Admin,
                 access: true,
                 redirect: "login"
               }
@@ -103,7 +104,7 @@ function configRoutes() {
           meta: {
             permissions: [
               {
-                role: "UserNTL",
+                role: group.USER_GROUP.User,
                 access: true,
                 redirect: "login"
               }
@@ -117,7 +118,7 @@ function configRoutes() {
               meta: {
                 permissions: [
                   {
-                    role: "AdminNTL",
+                    role: group.USER_GROUP.Admin,
                     access: false,
                     redirect: "login"
                   }
@@ -131,7 +132,7 @@ function configRoutes() {
               meta: {
                 permissions: [
                   {
-                    role: "UserNTL",
+                    role: group.USER_GROUP.User,
                     access: true,
                     redirect: "login"
                   }

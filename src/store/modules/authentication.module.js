@@ -33,7 +33,7 @@ const actions = {
   });
   },
 
-  logOutAction({commit}){debugger
+  logOutAction({commit}){
     logOut().then(res => {
       Vue.prototype.$removeItem("CREDENTIAL");
       router.push({name: 'Login', url:"pages/login"})
