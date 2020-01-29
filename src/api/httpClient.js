@@ -25,15 +25,15 @@ axios.interceptors.response.use(
   response => {
     return response;
   },
-  function(error) {
+  async function(error) {
     switch (error.response.status) {
       case 400: 
       alert("Bad Request: "+ error)
         break;
       case 401:
         alert("Unauthrorized!");
+        await Vue.forage.removeItem("CREDENTIAL");
         router.push({name: 'Login', url:"pages/login"})
-        Vue.prototype.$removeItem("CREDENTIAL");
         break;
       case 404: //....
         break;

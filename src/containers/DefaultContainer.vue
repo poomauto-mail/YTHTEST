@@ -19,8 +19,17 @@
             :fields="fields"
             :current-page="currentPage"
             :per-page="perPage"
+            :sort-by.sync="sortBy"
+            :sort-desc.sync="sortDesc"
+            sort-icon-left
+            responsive="sm"
+            @sort-changed="sortingChanged"
           ></b-table>
           <b-pagination size="md" :total-rows="totalPage" v-model="currentPage" :per-page="perPage"></b-pagination>
+          <div>
+      Sorting By: <b>{{ sortBy }}</b>, Sort Direction:
+      <b>{{ sortDesc ? 'Descending' : 'Ascending' }}</b>
+    </div>
           <p>Developer mode : {{mode}}</p>
           <!-- {{getDemo}} -->
         </div>
@@ -81,6 +90,8 @@ export default {
       firstName: "",
       lastName: "",
       creadential: {},
+      sortBy: "supplier name",
+      sortDesc: false,
       currentPage: 1,
       perPage: 10,
       items: [],
@@ -90,9 +101,13 @@ export default {
           label: "job id",
           sortable: false
         },
-        { key: "name", label: "supplier name",sortable: true, sortDirection: 'desc' },
+        {
+          key: "name",
+          label: "supplier name",
+          sortable: true
+        },
         // { key: "fileName", label: "file name" },
-        { key: "creationDate", label: "creation date" }
+        { key: "creationDate", label: "creation date", sortable: true }
       ],
       json: {}
     };
@@ -114,6 +129,12 @@ export default {
     totalPage: get("alllist/jobList@total")
   },
   methods: {
+    sortingChanged(ctx) {debugger
+      this.json.orderproperty =  ctx.sortBy.toUpperCase(),
+      this.json.orderbydescending = ctx.sortDesc;
+      this.jobListAction(this.json);
+     this.items = get("alllist/jobList@jobs");
+    },
     checkForm: function(e) {},
     saveName() {
       window.sessionStorage.setItem("SESSION", "SESSION SAVE");
