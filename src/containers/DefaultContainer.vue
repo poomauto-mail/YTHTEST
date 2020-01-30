@@ -13,6 +13,18 @@
         <!-- <p>Click to <a href="#" @click.prevent="setData">Counter: {{ data }}</a></p> -->
         <!-- <form id="app" @submit="checkForm" action="" method="post"> -->
         <div id="app">
+          <b-form-group
+            label="Per page"
+            label-cols-sm="6"
+            label-cols-md="4"
+            label-cols-lg="3"
+            label-align-sm="right"
+            label-size="sm"
+            label-for="perPageSelect"
+            class="mb-0"
+          >
+            <b-form-select v-model="perPage" id="perPageSelect" size="sm" :options="pageOptions"></b-form-select>
+          </b-form-group>
           <b-table
             show-empty
             :items="items"
@@ -26,10 +38,12 @@
             @sort-changed="sortingChanged"
           ></b-table>
           <b-pagination size="md" :total-rows="totalPage" v-model="currentPage" :per-page="perPage"></b-pagination>
+          <b-col sm="5" md="6" class="my-1"></b-col>
           <div>
-      Sorting By: <b>{{ sortBy }}</b>, Sort Direction:
-      <b>{{ sortDesc ? 'Descending' : 'Ascending' }}</b>
-    </div>
+            Sorting By:
+            <b>{{ sortBy }}</b>, Sort Direction:
+            <b>{{ sortDesc ? 'Descending' : 'Ascending' }}</b>
+          </div>
           <p>Developer mode : {{mode}}</p>
           <!-- {{getDemo}} -->
         </div>
@@ -94,12 +108,14 @@ export default {
       sortDesc: false,
       currentPage: 1,
       perPage: 10,
+      pageOptions: [5, 10, 15],
       items: [],
       fields: [
         {
           key: "id",
           label: "job id",
-          sortable: false
+          sortable: false,
+          orderable: false
         },
         {
           key: "name",
@@ -129,11 +145,17 @@ export default {
     totalPage: get("alllist/jobList@total")
   },
   methods: {
-    sortingChanged(ctx) {debugger
-      this.json.orderproperty =  ctx.sortBy.toUpperCase(),
-      this.json.orderbydescending = ctx.sortDesc;
-      this.jobListAction(this.json);
-     this.items = get("alllist/jobList@jobs");
+    sortingChanged(ctx) {
+      if (ctx.sortBy != "") {
+        //not important
+        this.json.orderproperty =
+          ctx.sortBy.toUpperCase() == "CREATIONDATE"
+            ? "CREATEDATE"
+            : ctx.sortBy.toUpperCase();
+        this.json.orderbydescending = ctx.sortDesc; //
+        this.jobListAction(this.json);
+        this.items = get("alllist/jobList@jobs");
+      }
     },
     checkForm: function(e) {},
     saveName() {
@@ -147,10 +169,19 @@ export default {
   watch: {
     currentPage: {
       handler: function(value) {
+        //debugger;
+        this.json.pagesize = this.perPage;
         this.json.pagenumber = parseInt(value) || 1;
         this.jobListAction(this.json);
       }
-    }
+    },
+      perPage: {
+        handler: function(value) {//debugger
+          this.json.pagesize = value;
+          this.json.pagenumber =this.currentPage;
+          this.jobListAction(this.json);
+        }
+      }
   },
   beforeMount: function() {
     this.json = {
