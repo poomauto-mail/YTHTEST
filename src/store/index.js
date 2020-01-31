@@ -2,12 +2,14 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 //import pathify from 'vuex-pathify'
 import pathify from './pathify' // <-- note the ./ denoting a local file!
-import hello from './modules/helloworld'
-import authentication from './modules/authentication.module'
-import alllist from './modules/alllist.module'
 import createPersistedState from "vuex-persistedstate";
 import VueLocalForage from 'vue-localforage'
 import * as localforage from 'localforage' 
+//modules here
+import hello from './modules/helloworld'
+import authentication from './modules/authentication.module'
+import alllist from './modules/alllist.module'
+import upload from './modules/upload.module'
 
 pathify.debug()
 Vue.use(Vuex)
@@ -16,7 +18,8 @@ const store = new Vuex.Store({
     modules: {
         hello,
         authentication,
-        alllist
+        alllist,
+        upload
     },
     plugins:[pathify.plugin, createPersistedState({ storage: localforage })],
 })
