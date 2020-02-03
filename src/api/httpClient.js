@@ -2,7 +2,7 @@ import axios from "axios";
 import Vue from "vue";
 import join from "url-join";
 import router from "@/router";
-import configs from '../../public/config/index';
+import configs from "../../public/config/index";
 
 //add headers
 axios.interceptors.request.use(
@@ -26,21 +26,26 @@ axios.interceptors.response.use(
     return response;
   },
   async function(error) {
-    switch (error.response.status) {
-      case 400: 
-      alert("Bad Request: "+ error)
-        break;
-      case 401:
-        alert("Unauthrorized!");
-        await Vue.forage.removeItem("CREDENTIAL");
-        router.push({name: 'Login', url:"pages/login"})
-        break;
-      case 404: //....
-        break;
-      case 500:
-        router.push({name: 'Page500', url:"pages/500"})
-        // alert(error.response);
-        break;
+    try {debugger
+      switch (error.response.status) {
+        case 400:
+          alert("Bad Request: " + error);
+          break;
+        case 401:
+          alert("Unauthrorized!");
+          await Vue.forage.removeItem("CREDENTIAL");
+          router.push({ name: "Login", url: "pages/login" });
+          break;
+        case 404: //....
+          break;
+        case 500:
+          router.push({ name: "Page500", url: "pages/500" });
+          // alert(error.response);
+          break;
+      }
+    } catch (error) {debugger
+      await Vue.forage.removeItem("CREDENTIAL");
+      router.push({ name: "Login", url: "pages/login" });
     }
   }
 );
