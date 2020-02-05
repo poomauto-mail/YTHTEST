@@ -10,7 +10,7 @@
         <SidebarMinimizer />
       </AppSidebar>
       <main class="main">
-        <h2>Upload Files</h2>
+        <!-- <h2>Upload Files</h2>
         <div class="large-12 medium-12 small-12 cell">
           <label>
             Files
@@ -60,13 +60,13 @@
             <b>{{ sortDesc ? 'Descending' : 'Ascending' }}</b>
           </div>
           <p>Developer mode : {{mode}}</p>
-          <!-- {{getDemo}} -->
-        </div>
-        <!-- </form> -->
+
+        </div> -->
+
 
         <Breadcrumb :list="list" />
         <div class="container-fluid">
-          <!-- <router-view></router-view> -->
+          <router-view></router-view>
         </div>
       </main>
       <AppAside fixed>

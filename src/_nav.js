@@ -9,6 +9,7 @@ export default {
         text: 'NEW'
       }
     },
+   
     {
       title: true,
       name: 'Theme',
@@ -17,6 +18,11 @@ export default {
         element: '',
         attributes: {}
       }
+    },
+    {
+      name: 'PdfViewer',
+      url: '/theme/pdf-viewer',
+      icon: 'icon-drop'
     },
     {
       name: 'Colors',

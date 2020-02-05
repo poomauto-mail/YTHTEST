@@ -32,6 +32,8 @@
     "dotenv": "^8.2.0",
     "flag-icon-css": "^3.3.0",
     "font-awesome": "^4.7.0",
+    "intersection-observer": "^0.7.0",
+    "pdfjs-dist": "^2.2.228",
     "perfect-scrollbar": "^1.4.0",
     "simple-line-icons": "^2.4.1",
     "url-join": "^4.0.1",
