@@ -1,131 +1,86 @@
 <template>
-  <div class="animated fadeIn">
-    <b-card header-tag="header">
-      <div slot="header">
-        <i class="icon-drop"></i>
-        Theme colors Greeting {{firstName}}
-      </div>
-      <b-card-body>
-        <b-row>
-          <color-theme color="bg-primary">
-            <h6>Brand Primary Color</h6>
-          </color-theme>
-          <color-theme color="bg-secondary">
-            <h6>Brand Secondary Color</h6>
-          </color-theme>
-          <color-theme color="bg-success">
-            <h6>Brand Success Color</h6>
-          </color-theme>
-          <color-theme color="bg-danger">
-            <h6>Brand Danger Color</h6>
-          </color-theme>
-          <color-theme color="bg-warning">
-            <h6>Brand Warning Color</h6>
-          </color-theme>
-          <color-theme color="bg-info">
-            <h6>Brand Info Color</h6>
-          </color-theme>
-          <color-theme color="bg-light">
-            <h6>Brand Light Color</h6>
-          </color-theme>
-          <color-theme color="bg-dark">
-            <h6>Brand Dark Color</h6>
-          </color-theme>
-        </b-row>
-      </b-card-body>
-    </b-card>
-    <b-card header-tag="header">
-      <div slot="header">
-        <i class="icon-drop"></i> Grays
-      </div>
-      <b-card-body>
-        <b-row>
-          <color-theme color="bg-gray-100">
-            <h6>Brand 100 Color</h6>
-          </color-theme>
-          <color-theme color="bg-gray-200">
-            <h6>Brand 200 Color</h6>
-          </color-theme>
-          <color-theme color="bg-gray-300">
-            <h6>Brand 300 Color</h6>
-          </color-theme>
-          <color-theme color="bg-gray-400">
-            <h6>Brand 400 Color</h6>
-          </color-theme>
-          <color-theme color="bg-gray-500">
-            <h6>Brand 500 Color</h6>
-          </color-theme>
-          <color-theme color="bg-gray-600">
-            <h6>Brand 600 Color</h6>
-          </color-theme>
-          <color-theme color="bg-gray-700">
-            <h6>Brand 700 Color</h6>
-          </color-theme>
-          <color-theme color="bg-gray-800">
-            <h6>Brand 800 Color</h6>
-          </color-theme>
-          <color-theme color="bg-gray-900">
-            <h6>Brand 900 Color</h6>
-          </color-theme>
-        </b-row>
-      </b-card-body>
-    </b-card>
-    <b-card header-tag="header">
-      <div slot="header">
-        <i class="icon-drop"></i> Additional colors
-      </div>
-      <b-card-body>
-        <b-row>
-          <color-theme color="bg-blue">
-            <h6>Brand Blue Color</h6>
-          </color-theme>
-          <color-theme color="bg-indigo">
-            <h6>Brand Indigo Color</h6>
-          </color-theme>
-          <color-theme color="bg-purple">
-            <h6>Brand Purple Color</h6>
-          </color-theme>
-          <color-theme color="bg-pink">
-            <h6>Brand Pink Color</h6>
-          </color-theme>
-          <color-theme color="bg-red">
-            <h6>Brand Red Color</h6>
-          </color-theme>
-          <color-theme color="bg-orange">
-            <h6>Brand Orange Color</h6>
-          </color-theme>
-          <color-theme color="bg-yellow">
-            <h6>Brand Yellow Color</h6>
-          </color-theme>
-          <color-theme color="bg-green">
-            <h6>Brand Green Color</h6>
-          </color-theme>
-          <color-theme color="bg-teal">
-            <h6>Brand Teal Color</h6>
-          </color-theme>
-          <color-theme color="bg-cyan">
-            <h6>Brand Cyan Color</h6>
-          </color-theme>
-        </b-row>
-      </b-card-body>
-    </b-card>
+  <div align="center">
+    <!-- <input type="checkbox" v-model="show" /> -->
+    <!-- <select v-model="src" style="width: 30em">
+            <option v-for="item in pdfList" :value="item" v-text="item"></option>
+    </select>-->
+    <input v-model.number="page" type="number" style="width: 5em" max="numPages" min="1" />
+    /{{numPages}}
+    <button @click="rotate += 90">&#x27F3;</button>
+    <button @click="rotate -= 90">&#x27F2;</button>
+    <button @click="$refs.pdf.print()">print</button>
+    <div
+      class="parent"
+      style="overflow: hidden; position: relative; backgroundColor: #62637a;width:60%; max-width:60%; max-height: 50%;height: 50%; "
+    >
+      <panZoom
+        style="  max-width:50%; max-height: 40%;height: 40%;"
+        :options="{minZoom: 0.2, maxZoom: 5}"
+        @init="onInit"
+        @mousedown="wheel"
+      >
+        <pdf
+          v-if="show"
+          ref="pdf"
+          style="border: 1px solid #62637a;"
+          :src="src"
+          :page="page"
+          :rotate="rotate"
+          @progress="loadedRatio = $event"
+          @error="error"
+          @num-pages="numPages = $event"
+          @link-clicked="page = $event"
+        ></pdf>
+      </panZoom>
+      <!-- <div
+        v-if="loadedRatio > 0 && loadedRatio < 1"
+        style="background-color: green; color: white; text-align: center"
+        :style="{ width: loadedRatio * 100 + '%' }"
+      >{{ Math.floor(loadedRatio * 100) }}%</div>-->
+    </div>
   </div>
 </template>
 
 <script>
 import ColorTheme from "./ColorTheme";
-import { get, sync, commit, dispatch } from "vuex-pathify";
+import { get } from "vuex-pathify";
+import pdf from "vue-pdf";
 
 export default {
   name: "colors",
-  components: { ColorTheme },
+  components: { ColorTheme, pdf },
   data() {
     return {
-      
+      show: true,
+      pdfList: ["https://cdn.filestackcontent.com/5qOCEpKzQldoRsVatUPS"],
+      src: "https://cdn.filestackcontent.com/5qOCEpKzQldoRsVatUPS",
+      loadedRatio: 0,
+      page: 1,
+      numPages: 0,
+      rotate: 0,
+      parentStyle: {}
     };
   },
   computed: {
     firstName: get("hello/firstName")
+  },
+  methods: {
+    password: function(updatePassword, reason) {
+      updatePassword(prompt('password is "test"'));
+    },
+    error: function(err) {
+      console.log(err);
+    },
+    onInit: function(panzoomInstance, id) {
+      // panzoomInstance.dispose();
+      panzoomInstance.on("pan", function(e) {
+        // if(e.alts){
+        // }
+      });
+    },
+    wheel: function(e) {
+      debugger;
+    }
   }
 };
 </script>
