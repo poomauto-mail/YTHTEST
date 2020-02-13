@@ -12,6 +12,8 @@ import router from './router'
 import VueJwtDecode from 'vue-jwt-decode'
 import forageHelper from './helper/localForageHelper';
 import { Pagination } from 'bootstrap-vue/es/components'
+import BlockUI from 'vue-blockui'
+//  import htmlImport from 'pdfjs-dist/web/viewer.html';
 // import ElementUI from 'element-ui'
 // import 'element-ui/lib/theme-chalk/index.css'
 // todo
@@ -26,6 +28,7 @@ Vue.use(BootstrapVue)
 Vue.use(VueJwtDecode)
 Vue.use(plugin)
 Vue.use(Pagination)
+Vue.use(BlockUI)
 // Vue.use(ElementUI)
 console.log(process.env.NODE_ENV)
 /* eslint-disable no-new */
