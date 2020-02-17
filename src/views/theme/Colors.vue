@@ -1,59 +1,55 @@
 <template>
-  <!-- style="width:100%;height:100%" class="container-fluid" -->
-  <div>
-    <div @mouseleave="mouseleaveLeftArrow()" @mouseover="mouseOverLeftArrow()">
-          <div class="row">
-            <div class="col-12">
-              <p>Page {{page}} of {{numPages}}</p>
-              <input v-model.number="page" type="number" style="width: 5em" max="numPages" min="1" />
-              /{{numPages}}
-              <button @click="rotate += 90">&#x27F3;</button>
-              <button @click="rotate -= 90">&#x27F2;</button>
-              <button @click="$refs.pdf.print()">print</button>
-            </div>
-          </div>
-          <div class="row">
-            <div id="leftArrow" class="col-2 text-center text-white">
-              <div v-if="mouseOverLeftArrowShow">
-                <i class="icon-arrow-left icons font-2xl d-block mt-4" @click="--page"></i>
-                Previous
-              </div>
-            </div>
-            <div
-              class="col-8 parent"
-              style="overflow: hidden; position: relative; backgroundColor: #62637a;width:60%; max-width:60%; max-height: 50%;height: 50%; "
-            >
-              <!-- <panZoom
-          style="  max-width:50%; max-height: 40%;height: 40%;"
-          :options="{minZoom: 0.2, maxZoom: 5}"
-          @init="onInit"
-          @mousedown="wheel"
-              >-->
-              <pdf
-                v-if="show"
-                ref="pdf"
-                style=" #62637a;"
-                :rotate="rotate"
-                :src="src"
-                :page="page"
-                @progress="loadedRatio = $event"
-                @error="error"
-                @num-pages="numPages = $event"
-                @link-clicked="page = $event"
-              ></pdf>
-              <!-- </panZoom> -->
-            </div>
-            <div
-              id="rightArrow"
-              class="col-2 text-center text-white"
-              @mouseleave="mouseleaveLeftArrow()"
-              @mouseover="mouseOverLeftArrow()"
-            >
-              <div v-if="mouseOverLeftArrowShow">
-                <i class="icon-arrow-right icons font-2xl d-block mt-4" @click="++page"></i>Next
-              </div>
-            </div>
-          </div>
+  <div id="app">
+    <div id="overlay"  @mouseleave="mouseleaveLeftArrow()" @mouseover="mouseOverLeftArrow()">
+      <div id="textLeftArrow">
+        <i class="icon-arrow-left icons font-2xl d-block mt-4 text-white" @click="--page"></i>
+        <!-- <button class="button" @click="--page">
+          <i style="color:white;" class="icon-arrow-left"></i>
+        </button>-->
+      </div>
+      <div id="top">a</div>
+      <div id="text">
+        <pdf
+          v-if="show"
+          ref="pdf"
+          id="vuepdf"
+          :rotate="rotate"
+          :src="src"
+          :page="page"
+          @progress="loadedRatio = $event"
+          @error="error"
+          @num-pages="numPages = $event"
+          @link-clicked="page = $event"
+        ></pdf>
+      </div>
+      <div v-if="mouseOverLeftArrowShow" id="middle" class="w3-animate-fading">
+        <button class="btn text-white" @click="rotate += 90">
+          <i class="icon-reload"></i>
+        </button>
+        <button class="btn text-white" @click="rotate -= 90">
+          <i class="icon-reload icon-flipped"></i>
+        </button>
+        <button class="btn text-white" @click="zoomIn()">
+          <i class="icon-magnifier-remove"></i>
+        </button>
+        <button class="btn text-white" @click="zoomOut()">
+          <i class="icon-magnifier-add"></i>
+        </button>
+        <button class="btn text-white">Download</button>
+        <button class="btn text-white" @click="$refs.pdf.print()">print</button>
+        <!-- <i class="icon-puzzle icons font-2xl h-block" @click="rotate += 90"></i>
+        <i class="icon-puzzle icons font-2xl h-block ml-2" @click="rotate -= 90"></i>
+        <i class="icon-puzzle icons font-2xl h-block ml-2"></i>
+        <i class="icon-puzzle icons font-2xl h-block ml-2"></i>
+        <i class="icon-puzzle icons font-2xl h-block ml-2"></i>-->
+      </div>
+      <div id="textRightArrow">
+        <i class="icon-arrow-right icons font-2xl d-block mt-4 text-white" @click="++page"></i>
+      </div>
+    </div>
+
+    <div style="padding:20px">
+      <button @click="on()">Turn on overlay effect</button>
     </div>
   </div>
 </template>
@@ -62,32 +58,48 @@
 import ColorTheme from "./ColorTheme";
 import { get } from "vuex-pathify";
 import pdf from "vue-pdf";
-import fullscreen from "vue-fullscreen";
-import Vue from "vue";
-import ModalFullScreenVue from "modal-fullscreen-vue";
-Vue.use(fullscreen);
+import { Overlay } from "vuejs-overlay";
+
 export default {
   name: "colors",
-  components: { ColorTheme, pdf, ModalFullScreenVue },
+  components: { ColorTheme, pdf, Overlay },
   data() {
     return {
       show: true,
       pdfList: ["https://cdn.filestackcontent.com/5qOCEpKzQldoRsVatUPS"],
-      // src: "https://cdn.filestackcontent.com/5qOCEpKzQldoRsVatUPS",
-      src: "pdf/vue-js.pdf",
+      src: "https://cdn.filestackcontent.com/5qOCEpKzQldoRsVatUPS",
+      // src: "pdf/vue-js.pdf",
       loadedRatio: 0,
       page: 1,
       numPages: 0,
       rotate: 0,
       parentStyle: {},
       mouseOverLeftArrowShow: false,
-      fullscreen: false
+      fullscreen: false,
+      opened: false,
+      visible: false
     };
   },
   computed: {
     firstName: get("hello/firstName")
   },
   methods: {
+    zoomIn(){debugger
+      var width = document.getElementById("vuepdf").style.width ;
+      
+    },
+    zoomOut(){
+      document.getElementById("vuepdf").style.width -= 300;
+    },
+    on() {
+      document.getElementById("overlay").style.display = "block";
+    },
+    off() {
+      document.getElementById("overlay").style.display = "none";
+    },
+    openOverlay() {
+      this.opened = this.visible = !true;
+    },
     handleShow(show) {
       alert(`show: ${show}`);
     },
@@ -135,71 +147,77 @@ export default {
   border: 3px solid green;
   text-align: center;
 }
-/* #outerContainer {
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-#mainContainer {
+
+#overlay {
+  overflow: hidden;
   position: absolute;
+  display: inline-block;
+  width: 100%;
+  height: 100vh;
   top: 0;
+  left: 0;
   right: 0;
   bottom: 0;
-  left: 0;
-  min-width: 320px;
-}
-#mainContainer,
-#viewerContainer,
-.page,
-.page canvas {
-  position: static;
-  padding: 0;
-  margin: 0;
-}
-.toolbar {
-  position: relative;
-  left: 0;
-  right: 0;
-  z-index: 9999;
-  cursor: default;
-  background-color: #000;
-}
+  background-color: rgba(0, 0, 0, 0.5);
 
-#toolbarContainer {
-  width: 100%;
+  cursor: pointer;
 }
-#toolbarViewer {
-  height: 32px;
-  background-color: #000;
-}
-html[dir="ltr"] #toolbarViewerLeft,
-html[dir="rtl"] #toolbarViewerRight {
-  float: left;
-}
-html[dir="ltr"] #toolbarViewerRight,
-html[dir="rtl"] #toolbarViewerLeft {
-  float: right;
-}
-html[dir="ltr"] #toolbarViewerLeft > *,
-html[dir="ltr"] #toolbarViewerMiddle > *,
-html[dir="ltr"] #toolbarViewerRight > *,
-html[dir="ltr"] .findbar * {
-  position: relative;
-  float: left;
-}
-html[dir="rtl"] #toolbarViewerLeft > *,
-html[dir="rtl"] #toolbarViewerMiddle > *,
-html[dir="rtl"] #toolbarViewerRight > *,
-html[dir="rtl"] .findbar * {
-  position: relative;
-  float: right;
-}
-
-#toolbarViewerMiddle {
-  background-color: #000;
-  position: absolute;
+#text {
+  position: fixed;
+  /* width: 70%;
+  height: 70%; */
+  top: 50%;
   left: 50%;
-  -webkit-transform: translateX(-50%);
-  transform: translateX(-50%);
-} */
+  font-size: 50px;
+  color: white;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+}
+#textLeftArrow {
+  position: fixed;
+  top: 50%;
+  left: 0;
+  /* transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%); */
+}
+#textRightArrow {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  /* transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%); */
+}
+#middle {
+  text-align: center;
+  border-radius: 7px;
+  background-color: #000;
+  position: relative;
+  width: 22%;
+  top: 90%;
+  left: 50%;
+  color: white;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+}
+#top {
+  text-align: center;
+  border-radius: 7px;
+  background-color: #000;
+  position: relative;
+  width: 30%;
+  bottom: 50%;
+  left: 50%;
+  color: white;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+}
+.button {
+  background: rgb(23, 23, 23);
+}
+.icon-flipped {
+    transform: scaleX(-1);
+    -moz-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    -ms-transform: scaleX(-1);
+}
 </style>
