@@ -28,7 +28,6 @@
       <div
         id="text"
         class="pdf-viewer-wrapper"
-        v-dragscroll="true"
         :class="{'zoom-active': zoom > 100 }"
       >
         <pdf
