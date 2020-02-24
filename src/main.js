@@ -15,6 +15,8 @@ import { Pagination } from 'bootstrap-vue/es/components'
 import panZoom from 'vue-panzoom'
 import BlockUI from 'vue-blockui'
 import ModalFullScreenVue from 'modal-fullscreen-vue'
+// import VueDragscroll from 'vue-dragscroll'
+// Vue.use(VueDragscroll)
 
 // import vueFullscreen from 'vue-fullscreen'
 // import ElementUI from 'element-ui'

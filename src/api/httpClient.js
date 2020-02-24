@@ -43,7 +43,7 @@ axios.interceptors.response.use(
           // alert(error.response);
           break;
       }
-    } catch (error) {debugger
+    } catch (error) {
       await Vue.forage.removeItem("CREDENTIAL");
       router.push({ name: "Login", url: "pages/login" });
     }

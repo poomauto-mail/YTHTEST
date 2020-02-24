@@ -39,6 +39,7 @@
     "vue": "^2.6.10",
     "vue-blockui": "^1.1.7",
     "vue-chartjs": "^3.4.2",
+    "vue-dragscroll": "^2.0.1",
     "vue-fullscreen": "^2.1.5",
     "vue-jwt-decode": "^0.1.0",
     "vue-loading-overlay": "^3.2.0",

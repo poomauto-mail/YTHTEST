@@ -1,17 +1,38 @@
 <template>
   <div id="app">
-    <div id="overlay"  @mouseleave="mouseleaveLeftArrow()" @mouseover="mouseOverLeftArrow()">
-      <div id="textLeftArrow">
-        <i class="icon-arrow-left icons font-2xl d-block mt-4 text-white" @click="--page"></i>
-        <!-- <button class="button" @click="--page">
-          <i style="color:white;" class="icon-arrow-left"></i>
-        </button>-->
+    <div
+      id="overlay"
+      v-if="showVuePdf"
+      class="d-inline-block"
+      @mouseleave="mouseleaveMiddleToolBar()"
+      @mouseover="mouseOverMiddleToolBar()"
+    >
+      <div id="top">
+        <input class="form-controlx text-white" v-model.number="page" type="number" min="1" max="numPages" value="page" style="backgroundColor: black;width: 5em" />
+        /{{numPages}}
+        <button
+          @click="showVuePdf = false;"
+          type="button"
+          class="close text-white"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
-      <div id="top">a</div>
-      <div id="text">
+      <div id="textLeftArrow">
+        <button class="btn btn-lg text-white" :disabled="page == 1" @click="--page">
+          <i style="color:white;" class="icon-arrow-left"></i>
+        </button>
+      </div>
+
+      <div
+        id="text"
+        class="pdf-viewer-wrapper"
+        v-dragscroll="true"
+        :class="{'zoom-active': zoom > 100 }"
+      >
         <pdf
-          v-if="show"
-          ref="pdf"
+          ref="viewpdf"
           id="vuepdf"
           :rotate="rotate"
           :src="src"
@@ -22,34 +43,37 @@
           @link-clicked="page = $event"
         ></pdf>
       </div>
-      <div v-if="mouseOverLeftArrowShow" id="middle" class="w3-animate-fading">
-        <button class="btn text-white" @click="rotate += 90">
+      <div  id="middle" class="w3-animate-fading">
+        <button class="btn text-white" @click="rotate -= 90">
           <i class="icon-reload"></i>
         </button>
-        <button class="btn text-white" @click="rotate -= 90">
+        <button class="btn text-white" @click="rotate += 90">
           <i class="icon-reload icon-flipped"></i>
         </button>
-        <button class="btn text-white" @click="zoomIn()">
+        <button class="btn text-white" :disabled="zoom == 100" @click="zoomOut()">
           <i class="icon-magnifier-remove"></i>
         </button>
-        <button class="btn text-white" @click="zoomOut()">
+        <button class="btn text-white" :disabled="zoom == 400" @click="zoomIn()">
           <i class="icon-magnifier-add"></i>
         </button>
         <button class="btn text-white">Download</button>
-        <button class="btn text-white" @click="$refs.pdf.print()">print</button>
-        <!-- <i class="icon-puzzle icons font-2xl h-block" @click="rotate += 90"></i>
-        <i class="icon-puzzle icons font-2xl h-block ml-2" @click="rotate -= 90"></i>
-        <i class="icon-puzzle icons font-2xl h-block ml-2"></i>
-        <i class="icon-puzzle icons font-2xl h-block ml-2"></i>
-        <i class="icon-puzzle icons font-2xl h-block ml-2"></i>-->
+        <!-- <button class="btn text-white" @click="$refs.viewpdf.print()">print</button> -->
+        <button class="btn text-white" >print</button>
       </div>
       <div id="textRightArrow">
-        <i class="icon-arrow-right icons font-2xl d-block mt-4 text-white" @click="++page"></i>
+        <button
+          id="nextBtn"
+          class="btn btn-lg text-white"
+          :disabled="page == numPages"
+          @click="++page"
+        >
+          <i style="color:white;" class="icon-arrow-right icons"></i>
+        </button>
       </div>
     </div>
 
     <div style="padding:20px">
-      <button @click="on()">Turn on overlay effect</button>
+      <button @click="showVuePdf = true;">Turn on overlay effect</button>
     </div>
   </div>
 </template>
@@ -58,95 +82,73 @@
 import ColorTheme from "./ColorTheme";
 import { get } from "vuex-pathify";
 import pdf from "vue-pdf";
-import { Overlay } from "vuejs-overlay";
-
+import { dragscroll } from "vue-dragscroll";
 export default {
+  directives: { dragscroll },
   name: "colors",
-  components: { ColorTheme, pdf, Overlay },
+  components: { ColorTheme, pdf },
   data() {
     return {
-      show: true,
-      pdfList: ["https://cdn.filestackcontent.com/5qOCEpKzQldoRsVatUPS"],
-      src: "https://cdn.filestackcontent.com/5qOCEpKzQldoRsVatUPS",
+      // src: "https://cdn.filestackcontent.com/5qOCEpKzQldoRsVatUPS",
       // src: "pdf/vue-js.pdf",
+      // src: "pdf/yota-pdf.pdf",
+      src: "pdf/start-website.pdf",
       loadedRatio: 0,
       page: 1,
       numPages: 0,
       rotate: 0,
-      parentStyle: {},
-      mouseOverLeftArrowShow: false,
-      fullscreen: false,
-      opened: false,
-      visible: false
+      mouseOverMiddleToolShow: false,
+      zoom: 100,
+      showVuePdf: false
     };
   },
   computed: {
     firstName: get("hello/firstName")
   },
   methods: {
-    zoomIn(){debugger
-      var width = document.getElementById("vuepdf").style.width ;
-      
+    // mouseOverLeftArrow() {
+    //   document.getElementById("textLeftArrow").style.backgroundColor = "#000";
+    // },
+    // mouseLeaveLeftArrow() {
+    //   document.getElementById("textLeftArrow").style.backgroundColor = "";
+    // },
+    // mouseOverRightArrow() {
+    //   document.getElementById("textRightArrow").style.backgroundColor = "#000";
+    // },
+
+    // mouseLeaveRightArrow() {
+    //   document.getElementById("textRightArrow").style.backgroundColor = "";
+    // },
+    zoomIn() {
+      document.getElementById("text").style.width = (this.zoom += 20) + "%";
+      // document.getElementById("vuepdf").style.width = (this.zoom += 20) + "%";
+      console.log(this.zoom);
     },
-    zoomOut(){
-      document.getElementById("vuepdf").style.width -= 300;
+    zoomOut() {
+      document.getElementById("text").style.width = (this.zoom -= 20) + "%";
+      // document.getElementById("vuepdf").style.width = (this.zoom += 20) + "%";
+      console.log(this.zoom);
     },
-    on() {
-      document.getElementById("overlay").style.display = "block";
+
+    mouseOverMiddleToolBar() {
+      this.mouseOverMiddleToolShow = true;
     },
-    off() {
-      document.getElementById("overlay").style.display = "none";
-    },
-    openOverlay() {
-      this.opened = this.visible = !true;
-    },
-    handleShow(show) {
-      alert(`show: ${show}`);
-    },
-    toggle() {
-      this.$refs["fullscreen"].toggle(); // recommended
-      // this.fullscreen = !this.fullscreen // deprecated
-    },
-    fullscreenChange(fullscreen) {
-      this.fullscreen = fullscreen;
-    },
-    mouseOverLeftArrow() {
-      this.mouseOverLeftArrowShow = true;
-    },
-    mouseleaveLeftArrow() {
-      this.mouseOverLeftArrowShow = false;
+    mouseleaveMiddleToolBar() {
+      this.mouseOverMiddleToolShow = false;
     },
     password: function(updatePassword, reason) {
       updatePassword(prompt('password is "test"'));
     },
     error: function(err) {
       console.log(err);
-    },
-    onInit: function(panzoomInstance, id) {
-      // panzoomInstance.dispose();
-      panzoomInstance.on("pan", function(e) {
-        // if(e.alts){
-        // }
-      });
-    },
-    wheel: function(e) {
-      debugger;
     }
+  },
+  beforeMount() {
+    window.devicePixelRatio = 0;
   }
 };
 </script>
-<style scoped>
-#leftArrow {
-  background-color: #000;
-}
-#rightArrow {
-  background-color: #000;
-}
-.center {
-  padding: 70px 0;
-  border: 3px solid green;
-  text-align: center;
-}
+<style scoped lang='scss'>
 
 #overlay {
   overflow: hidden;
@@ -158,20 +160,22 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-
+  background-color: rgba(0, 0, 0, 0.281);
+  z-index: 5000;
   cursor: pointer;
 }
+
+
+
+
 #text {
-  position: fixed;
-  /* width: 70%;
-  height: 70%; */
+  position: absolute;
   top: 50%;
   left: 50%;
   font-size: 50px;
   color: white;
-  transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
+  // transform: translate(-50%, -50%);
+  // -ms-transform: translate(-50%, -50%);
 }
 #textLeftArrow {
   position: fixed;
@@ -180,6 +184,10 @@ export default {
   /* transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%); */
 }
+#textLeftArrow:hover{
+   background-color: #000;
+}
+
 #textRightArrow {
   position: fixed;
   top: 50%;
@@ -187,37 +195,59 @@ export default {
   /* transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%); */
 }
+
+#textRightArrow:hover{
+   background-color: #000;
+}
+
+
 #middle {
+  display: block;
   text-align: center;
   border-radius: 7px;
   background-color: #000;
   position: relative;
-  width: 22%;
+  width: 370px;
   top: 90%;
   left: 50%;
   color: white;
   transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
 }
+
+
+
 #top {
   text-align: center;
-  border-radius: 7px;
+  padding: 13.5px 0;
+  margin-right: 15px;
+  // border-radius: 2px;
+  z-index: 1000;
   background-color: #000;
-  position: relative;
-  width: 30%;
-  bottom: 50%;
-  left: 50%;
+  position: fixed;
+  width: 100%;
+  height: 54.8px;
+  // bottom: 50%;
+  // left: 50%;
   color: white;
-  transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-}
-.button {
-  background: rgb(23, 23, 23);
+  // transform: translate(-50%, -50%);
+  // -ms-transform: translate(-50%, -50%);
 }
 .icon-flipped {
-    transform: scaleX(-1);
-    -moz-transform: scaleX(-1);
-    -webkit-transform: scaleX(-1);
-    -ms-transform: scaleX(-1);
+  transform: scaleX(-1);
+  -moz-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+  -ms-transform: scaleX(-1);
+}
+
+.pdf-viewer-wrapper {
+  overflow: hidden;
+  max-height: 90vh;
+  // transition:all 1s ease;
+  &.zoom-active {
+    cursor: grab;
+  }
+
+  
 }
 </style>
